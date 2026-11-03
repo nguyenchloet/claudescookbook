@@ -1,0 +1,15 @@
+@charset "UTF-8";
+/* CSS Document */
+
+body {
+	
+	display: inline-block;
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+	/* background-image: image('../img/wooden-bacground.jpg'); */
+}
+
+h1 {
+	color:  aliceblue;
+}

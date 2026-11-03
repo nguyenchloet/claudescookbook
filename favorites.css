@@ -1,0 +1,114 @@
+#favorites-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    color: var(--text-color);
+    background: var(--content-bg);
+}
+
+.favorite-form-section,
+.saved-favorites-section {
+    background: var(--content-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+#favorite-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#favorite-form input,
+#favorite-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    font: inherit;
+    color: var(--text-color);
+    background: var(--page-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+
+#favorite-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.import-url-row {
+    display: flex;
+    gap: 10px;
+}
+
+.import-url-row input {
+    flex: 1;
+    min-width: 0;
+}
+
+#favorites-page button {
+    padding: 9px 14px;
+    font: inherit;
+    color: var(--text-color);
+    background: var(--button-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#import-status {
+    margin: 0;
+    color: var(--accent-color);
+}
+
+.favorite-recipe {
+    background: var(--surface-bg);
+    padding: 20px 0;
+    margin: 16px 0;
+    border-bottom: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.favorite-recipe img {
+    max-width: 100%;
+    max-height: 350px;
+    object-fit: contain;
+    display: block;
+    margin: 20px auto;
+}
+
+.favorite-recipe li {
+    margin-left: 20px;
+}
+
+.favorite-recipe a {
+    color: var(--accent-color);
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.favorite-recipe button {
+    display: block;
+}
+
+.favorite-recipe > p {
+    text-align: center;
+}
+
+.favorite-yield-controls,
+.favorite-increment-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+@media (max-width: 600px) {
+    .import-url-row {
+        flex-direction: column;
+    }
+}

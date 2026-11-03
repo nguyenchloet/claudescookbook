@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Recipe Index | Claude's Cookbook</title>
+        <link rel="stylesheet" href="recipestyle.css">
+
+        <style>
+            .recipe-index {
+                max-width: 800px;
+                margin: 40px auto;
+                padding: 0 20px;
+            }
+
+            .recipe-search {
+                width: 100%;
+                padding: 12px;
+                margin: 20px 0;
+                font-size: 16px;
+                border: 1px solid var(--border-color);
+                border-radius: 6px;
+                background: var(--background-color);
+                color: var(--text-color);
+            }
+
+            /* Override styles for the recipe index page */
+            .recipe-index h1 {
+                position: static;
+                top: auto;
+                font-family: inherit;
+                font-size: 2rem;
+                text-align: left;
+                background: none;
+                border: none;
+                padding: 0;
+                width: auto;
+            }
+
+            .recipe-index-list {
+                list-style: none;
+                padding: 0;
+            }
+
+            .recipe-index-list li {
+                padding: 10px 0;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .recipe-index-list a {
+                color: var(--text-color);
+                text-decoration: none;
+            }
+
+            .recipe-index-list a:hover {
+                color: var(--accent-color);
+                text-decoration: underline;
+            }
+
+            #no-results {
+                display: none;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-header">
+                    <strong>Claude's Cookbook</strong>
+                </a>
+                <ul class="nav-ul-right">
+                    <li><a href="index.html#recipes">Recipes</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="recipe-index">
+            <h1>Recipe Index</h1>
+
+            <input
+                type="search"
+                id="recipe-search"
+                class="recipe-search"
+                placeholder="Search recipes..."
+                aria-label="Search recipes"
+            >
+
+            <ul id="recipe-list" class="recipe-index-list"></ul>
+
+            <p id="no-results">No recipes found.</p>
+        </main>
+
+        <script>
+            const recipeList = document.getElementById("recipe-list");
+            const searchInput = document.getElementById("recipe-search");
+            const noResults = document.getElementById("no-results");
+
+            let recipes = [];
+            let favoriteRecipes = [];
+
+
+            fetch("index.html")
+                .then(response => response.text())
+                .then(html => {
+                    const documentParser = new DOMParser();
+                    const recipeDocument = documentParser.parseFromString(
+                        html,
+                        "text/html"
+                    );
+
+                    recipes = Array.from(
+                        recipeDocument.querySelectorAll(".recipe-item")
+                    ).map((recipe, index) => ({
+                        name: recipe.querySelector("h2")?.textContent.trim(),
+                        id: index
+                    })).filter(recipe => recipe.name);
+
+                    recipes.sort((a, b) =>
+                        a.name.localeCompare(b.name)
+                    );
+                    favoriteRecipes = JSON.parse(
+                        localStorage.getItem("claudesCookbookFavorites") || "[]"
+                    ).map(recipe => ({
+                        name: recipe.title,
+                        id: recipe.id,
+                        isFavorite: true
+                    }));
+
+                    recipes = recipes.concat(favoriteRecipes);
+
+                    recipes.sort((a, b) => a.name.localeCompare(b.name));
+                    displayRecipes(recipes);
+                })
+                .catch(error => {
+                    console.error("Could not load recipes:", error);
+                    noResults.textContent = "Unable to load recipes.";
+                    noResults.style.display = "block";
+                });
+
+            function displayRecipes(recipeArray) {
+                recipeList.innerHTML = "";
+
+                recipeArray.forEach(recipe => {
+                    const listItem = document.createElement("li");
+                    const link = document.createElement("a");
+
+                    link.textContent = recipe.name;
+                    link.href = recipe.isFavorite
+                        ? `favorites.html#favorite-${recipe.id}`
+                        : `index.html?recipe=${recipe.id}#recipes`;
+                    listItem.appendChild(link);
+                    recipeList.appendChild(listItem);
+                });
+
+                noResults.style.display =
+                    recipeArray.length === 0 ? "block" : "none";
+            }
+
+            searchInput.addEventListener("input", () => {
+                const searchTerm = searchInput.value
+                    .trim()
+                    .toLowerCase();
+
+                const filteredRecipes = recipes.filter(recipe =>
+                    recipe.name.toLowerCase().includes(searchTerm)
+                );
+
+                displayRecipes(filteredRecipes);
+            });
+        </script>
+    </body>
+</html>
