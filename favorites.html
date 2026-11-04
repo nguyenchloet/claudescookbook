@@ -5,41 +5,42 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Favorites | Claude's Cookbook</title>
         <link rel="stylesheet" href="recipestyle.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap">
         <link rel="stylesheet" href="favorites.css">
         <link rel="icon" type="image/png" href="/favicon.png?v=2">
     </head>
     <body>
         <div class="outline">
             <header>
-                <nav class="nav-menu">
-                    <ul class="nav-ul">
-                        <li class="nav-header"><strong>Claude's Cookbook</strong></li>
-                        <ul class="nav-ul-right">
-                            <li><a href="index.html">Recipes</a></li>
-                            <li><a href="recipe-index.html">Recipe Index</a></li>
-                            <li><a href="favorites.html">Favorite Recipes (External)</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li class="cooking-mode-control">
-                                <button
-                                    id="cooking-mode-toggle"
-                                    class="toggle-switch"
-                                    type="button"
-                                    role="switch"
-                                    aria-checked="false"
-                                    aria-label="Cooking Mode"
-                                >
-                                    <span class="toggle-knob"></span>
-                                </button>
-                                <span>Cooking Mode<br><small>(Keep Screen On)</small></span>
-                            </li>
+                <nav class="nav-menu" aria-label="Main navigation">
+                    <a href="index.html" class="nav-header"><strong>Claude's Cookbook</strong></a>
+                    <ul class="nav-ul-right">
+                        <li><a href="index.html">Recipes</a></li>
+                        <li><a href="recipe-index.html">Recipe Index</a></li>
+                        <li><a href="favorites.html" aria-current="page">Favorite Recipes (External)</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li class="cooking-mode-control">
+                            <button
+                                id="cooking-mode-toggle"
+                                class="toggle-switch"
+                                type="button"
+                                role="switch"
+                                aria-checked="false"
+                                aria-label="Cooking Mode"
+                            >
+                                <span class="toggle-knob"></span>
+                            </button>
+                            <span>Cooking Mode<br><small>(Keep Screen On)</small></span>
+                        </li>
+                        <li>
                             <button id="theme-toggle" type="button" aria-label="Switch to dark mode">☾</button>
-                        </ul>
+                        </li>
                     </ul>
                 </nav>
             </header>
 
             <main id="favorites-page">
-                <h3>Favorite Recipes (External)</h3>
+                <h1 class="page-title">Favorite Recipes (External)</h1>
                 <button type="button" id="toggle-favorite-form">
                     Add a Favorite Recipe
                 </button>

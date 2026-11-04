@@ -6,40 +6,35 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Claude's Cookbook</title>
         <link rel="stylesheet" href="recipestyle.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Fasthand&display=swap" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@500;800&family=Mrs+Saint+Delafield&family=Roboto:ital,wght@1,900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap">
         <link rel="icon" type="image/png" href="/favicon.png?v=2">
     </head>
     <body>
         <div class="outline"> 
             <header>
-                <nav class="nav-menu">
-                    <ul class="nav-ul">
-                        <li class="nav-header"><strong>Claude's Cookbook</strong></p></li>
-                        <ul class="nav-ul-right">
-                            <li><a href="index.html">Recipes</a></li>
-                            <li><a href="recipe-index.html">Recipe Index</a></li>
-                            <li><a href="favorites.html">Favorite Recipes (External)</a></li>
-                            <li><a href="about.html">About</a></li>
-                            <li class="cooking-mode-control">
-                                <button
-                                    id="cooking-mode-toggle"
-                                    class="toggle-switch"
-                                    type="button"
-                                    role="switch"
-                                    aria-checked="false"
-                                    aria-label="Cooking Mode"
-                                >
-                                    <span class="toggle-knob"></span>
-                                </button>
-                                <span>Cooking Mode<br><small>(Keep Screen On)</small></span>
-                            </li> 
-                            <button id="theme-toggle" aria-label="Switch to dark mode">☾</button>
-                        </ul>
+                <nav class="nav-menu" aria-label="Main navigation">
+                    <a class="nav-header" href="index.html"><strong>Claude's Cookbook</strong></a>
+                    <ul class="nav-ul-right">
+                        <li><a href="index.html" aria-current="page">Recipes</a></li>
+                        <li><a href="recipe-index.html">Recipe Index</a></li>
+                        <li><a href="favorites.html">Favorite Recipes (External)</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li class="cooking-mode-control">
+                            <button
+                                id="cooking-mode-toggle"
+                                class="toggle-switch"
+                                type="button"
+                                role="switch"
+                                aria-checked="false"
+                                aria-label="Cooking Mode"
+                            >
+                                <span class="toggle-knob"></span>
+                            </button>
+                            <span>Cooking Mode<br><small>(Keep Screen On)</small></span>
+                        </li>
+                        <li>
+                            <button id="theme-toggle" type="button" aria-label="Switch to dark mode">☾</button>
+                        </li>
                     </ul>
                 </nav>
             </header>
@@ -48,7 +43,7 @@
             </div> -->
 
             <main id="recipes">
-                <h3>Claude's Recipes</h3>
+                <h1 class="page-title">Claude's Recipes</h1>
                 <section id="add-recipe-section">
                     <h2>Add Claude's Recipe</h2>
 
@@ -91,8 +86,8 @@
                    
                     <div class="recipes">
                         <div class="buttons-container">
-                            <span class="left arrow prev"></span>
-                            <span class="right arrow next"></span>
+                            <button type="button" class="left arrow prev" aria-label="Previous recipe"></button>
+                            <button type="button" class="right arrow next" aria-label="Next recipe"></button>
                         </div>
                         <ul class="recipe-items">
                             <li class="recipe-item">
@@ -150,7 +145,7 @@
                                         <li class="ingredient"><input type="checkbox">pepper</li>
                                         <li class="ingredient"><input type="checkbox"><span class="ingredient-amount">a</span><span class="output-amount"></span>shot or two of worcestershire sauce (Lee and Perrin sauce)</li>
                                         <li class="ingredient"><input type="checkbox"><span class="ingredient-amount">a</span><span class="output-amount"></span>shot or two of tabasco</li>
-                                        <li class="ingredient"><input type="checkbox"><span class="ingredient-amount">a</span><span class="output-amount"></span>spoon of facultative Dijon mustard (more if you like it piquante)</li>
+                                        <li class="ingredient"><input type="checkbox"><span class="ingredient-amount">a</span><span class="output-amount"></span>spoon of facultative (optional) Dijon mustard (more if you like it piquante)</li>
                                         <li class="ingredient"><input type="checkbox"><span class="ingredient-amount">a</span><span class="output-amount"></span>spoon or two of cold water</li>
                                         <li class="ingredient"><input type="checkbox"><span class="ingredient-amount">2</span><span class="output-amount"></span>-<span class="ingredient-amount">3</span><span class="output-amount"></span>spoons or a good shot of olive oil</li>
                                     </ul>
@@ -200,9 +195,9 @@
                                     <div class="increment-div">
                                         <strong>Increment:</strong>
                                         <div class="increment-output-container">
-                                            <div class="value-button" id="decrease" onclick="decreaseIncrement()" value="decrease value">-</div> 
+                                            <div class="value-button" id="decrease-increment-whole-chicken" onclick="decreaseIncrement()" value="decrease value">-</div>
                                             <div class="increment-output"></div>
-                                            <div class="value-button" id="increase" onclick="increaseIncrement()" value="increase value">+</div>     
+                                            <div class="value-button" id="increase-increment-whole-chicken" onclick="increaseIncrement()" value="increase value">+</div>
                                             <button type="button" class="reset-increment" onclick="resetIncrement()">Reset</button>
                                         </div>
                                         <div>
@@ -265,9 +260,9 @@
                                     <div class="increment-div">
                                         <strong>Increment:</strong>
                                         <div class="increment-output-container">
-                                            <button type="button" class="value-button" id="decrease" onclick="decreaseIncrement()" aria-label="Decrease increment">−</button>
+                                            <button type="button" class="value-button" id="decrease-increment-seafood-pasta" onclick="decreaseIncrement()" aria-label="Decrease increment">−</button>
                                             <div class="increment-output" aria-live="polite"></div>
-                                            <button type="button" class="value-button" id="increase" onclick="increaseIncrement()" aria-label="Increase increment">+</button>
+                                            <button type="button" class="value-button" id="increase-increment-seafood-pasta" onclick="increaseIncrement()" aria-label="Increase increment">+</button>
                                         </div>
                                         <div>
                                             <div class="og-increment">1</div>
@@ -409,9 +404,9 @@
                                     <div class="increment-div">
                                         <strong>Increment:</strong>
                                         <div class="increment-output-container">
-                                            <button type="button" class="value-button" id="decrease" onclick="decreaseIncrement()" aria-label="Decrease increment">−</button>
+                                            <button type="button" class="value-button" id="decrease-increment-poisson" onclick="decreaseIncrement()" aria-label="Decrease increment">−</button>
                                             <div class="increment-output" aria-live="polite"></div>
-                                            <button type="button" class="value-button" id="increase" onclick="increaseIncrement()" aria-label="Increase increment">+</button>
+                                            <button type="button" class="value-button" id="increase-increment-poisson" onclick="increaseIncrement()" aria-label="Increase increment">+</button>
                                         </div>
                                         <div>
                                             <div class="og-increment">1</div>
@@ -677,7 +672,7 @@
                             </li>
 
                             <li class="recipe-item">
-                                <h2>Poisson à la Bonne Femme<br>(Fish Simple Style)</h2>
+                                <h2>Poisson à la Bonne Femme <br>(Fish Simple Style)</h2>
                                <div class="recipe-image-container">
                                     <img class="recipe-image" alt="Poisson à la Bonne Femme" hidden>
                                     <button type="button" class="remove-recipe-image" hidden>
@@ -1401,9 +1396,9 @@
                                     <div class="increment-div">
                                         <strong>Increment:</strong>
                                         <div class="increment-output-container">
-                                            <button type="button" class="value-button" id="decrease" onclick="decreaseIncrement()" aria-label="Decrease increment">−</button>
+                                            <button type="button" class="value-button" id="decrease-increment-pie-crust" onclick="decreaseIncrement()" aria-label="Decrease increment">−</button>
                                             <div class="increment-output" aria-live="polite"></div>
-                                            <button type="button" class="value-button" id="increase" onclick="increaseIncrement()" aria-label="Increase increment">+</button>
+                                            <button type="button" class="value-button" id="increase-increment-pie-crust" onclick="increaseIncrement()" aria-label="Increase increment">+</button>
                                         </div>
                                         <div>
                                             <div class="og-increment">1</div>
@@ -1470,8 +1465,8 @@
                 updateThemeButton();
             });
         </script>
+        <footer>
+            <p>&copy; 2026 Claude's Cookbook. All rights reserved.</p>
+        </footer>
     </body>
-    <footer>
-        <p>&copy; 2026 Claude's Cookbook. All rights reserved.</p>
-    </footer>
 </html>

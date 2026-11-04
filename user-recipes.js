@@ -23,6 +23,7 @@ function createTextElement(tag, text) {
 function displayUserRecipe(recipe) {
     const article = document.createElement("article");
     article.className = "user-recipe-card";
+    article.id = `user-recipe-${recipe.id}`;
 
     article.appendChild(createTextElement("h2", recipe.name));
     article.appendChild(createTextElement("p", `Yield: ${recipe.yield}`));
@@ -61,6 +62,10 @@ function displayUserRecipe(recipe) {
     article.appendChild(createTextElement("p", `Source: ${recipe.source}`));
 
     recipeContainer.appendChild(article);
+
+    if (window.location.hash === `#${article.id}`) {
+        article.scrollIntoView();
+    }
 }
 
 function displaySavedUserRecipes() {
@@ -78,7 +83,25 @@ showRecipeFormButton.addEventListener("click", () => {
         : "Cancel";
 });
 
-recipeForm.addEventListener("submit", event => {
+function readImageFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.addEventListener("load", () => {
+            if (typeof reader.result === "string") {
+                resolve(reader.result);
+            } else {
+                reject(new Error("Could not read the selected image."));
+            }
+        });
+        reader.addEventListener("error", () => {
+            reject(reader.error || new Error("Could not read the selected image."));
+        });
+        reader.readAsDataURL(file);
+    });
+}
+
+recipeForm.addEventListener("submit", async event => {
     event.preventDefault();
 
     recipeFormError.textContent = "";
@@ -87,6 +110,18 @@ recipeForm.addEventListener("submit", event => {
         recipeFormError.textContent = "Please complete all required fields.";
         recipeForm.reportValidity();
         return;
+    }
+
+    const imageFile = document.getElementById("new-recipe-image").files[0];
+    let image = "";
+
+    if (imageFile) {
+        try {
+            image = await readImageFile(imageFile);
+        } catch (error) {
+            recipeFormError.textContent = error.message;
+            return;
+        }
     }
 
     const recipe = {
@@ -102,7 +137,7 @@ recipeForm.addEventListener("submit", event => {
             .map(item => item.trim())
             .filter(item => item),
         source: document.getElementById("new-recipe-source").value.trim(),
-        image: document.getElementById("new-recipe-image").value.trim()
+        image
     };
 
     if (

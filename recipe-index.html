@@ -3,76 +3,23 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";</script>
         <title>Recipe Index | Claude's Cookbook</title>
         <link rel="stylesheet" href="recipestyle.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap">
         <link rel="icon" type="image/png" href="/favicon.png">
 
-        <style>
-            .recipe-index {
-                max-width: 800px;
-                margin: 40px auto;
-                padding: 0 20px;
-            }
-
-            .recipe-search {
-                width: 100%;
-                padding: 12px;
-                margin: 20px 0;
-                font-size: 16px;
-                border: 1px solid var(--border-color);
-                border-radius: 6px;
-                background: var(--background-color);
-                color: var(--text-color);
-            }
-
-            /* Override styles for the recipe index page */
-            .recipe-index h1 {
-                position: static;
-                top: auto;
-                font-family: inherit;
-                font-size: 2rem;
-                text-align: left;
-                background: none;
-                border: none;
-                padding: 0;
-                width: auto;
-            }
-
-            .recipe-index-list {
-                list-style: none;
-                padding: 0;
-            }
-
-            .recipe-index-list li {
-                padding: 10px 0;
-                border-bottom: 1px solid var(--border-color);
-            }
-
-            .recipe-index-list a {
-                color: var(--text-color);
-                text-decoration: none;
-            }
-
-            .recipe-index-list a:hover {
-                color: var(--accent-color);
-                text-decoration: underline;
-            }
-
-            #no-results {
-                display: none;
-            }
-        </style>
     </head>
 
     <body>
         <header>
-            <nav class="nav-menu">
+            <nav class="nav-menu" aria-label="Main navigation">
                 <a href="index.html" class="nav-header">
                     <strong>Claude's Cookbook</strong>
                 </a>
                 <ul class="nav-ul-right">
                     <li><a href="index.html">Recipes</a></li>
-                    <li><a href="recipe-index.html">Recipe Index</a></li>
+                    <li><a href="recipe-index.html" aria-current="page">Recipe Index</a></li>
                     <li><a href="favorites.html">Favorite Recipes (External)</a></li>
                     <li><a href="about.html">About</a></li>
                 </ul>
@@ -131,7 +78,15 @@
                         isFavorite: true
                     }));
 
-                    recipes = recipes.concat(favoriteRecipes);
+                    const userRecipes = JSON.parse(
+                        localStorage.getItem("claudesCookbookUserRecipes") || "[]"
+                    ).map(recipe => ({
+                        name: recipe.name,
+                        id: recipe.id,
+                        isUserRecipe: true
+                    })).filter(recipe => recipe.name && recipe.id);
+
+                    recipes = recipes.concat(favoriteRecipes, userRecipes);
 
                     recipes.sort((a, b) => a.name.localeCompare(b.name));
                     displayRecipes(recipes);
@@ -152,7 +107,9 @@
                     link.textContent = recipe.name;
                     link.href = recipe.isFavorite
                         ? `favorites.html#favorite-${recipe.id}`
-                        : `index.html?recipe=${recipe.id}#recipes`;
+                        : recipe.isUserRecipe
+                            ? `index.html#user-recipe-${encodeURIComponent(recipe.id)}`
+                            : `index.html?recipe=${recipe.id}#recipes`;
                     listItem.appendChild(link);
                     recipeList.appendChild(listItem);
                 });
@@ -173,8 +130,8 @@
                 displayRecipes(filteredRecipes);
             });
         </script>
-    </body>
     <footer>
         <p>&copy; 2026 Claude's Cookbook. All rights reserved.</p>
     </footer>
+    </body>
 </html>

@@ -45,6 +45,22 @@ function formatRecipeText(value) {
 function parseYield(value) {
     const text = String(value).toLowerCase().trim();
 
+    const mixedFraction = text.match(/(\d+(?:\.\d+)?)\s+(\d+)\s*\/\s*(\d+)/);
+    if (mixedFraction) {
+        const denominator = Number(mixedFraction[3]);
+        return denominator
+            ? Number(mixedFraction[1]) + Number(mixedFraction[2]) / denominator
+            : null;
+    }
+
+    const fraction = text.match(/(\d+)\s*\/\s*(\d+)/);
+    if (fraction) {
+        const denominator = Number(fraction[2]);
+        return denominator ? Number(fraction[1]) / denominator : null;
+    }
+
+    if (/^one\s+half(?:\b|$)/.test(text)) return 0.5;
+
     const numberWords = {
         zero: 0,
         one: 1,
@@ -59,8 +75,7 @@ function parseYield(value) {
         ten: 10,
         eleven: 11,
         twelve: 12,
-        half: 0.5,
-        "one half": 1.5
+        half: 0.5
     };
 
     const match = text.match(
@@ -96,7 +111,18 @@ async function importRecipe() {
             body: JSON.stringify({ url })
         });
 
-        const recipe = await response.json();
+        const responseBody = await response.text();
+        let recipe;
+
+        try {
+            recipe = JSON.parse(responseBody);
+        } catch {
+            if (!response.ok) {
+                throw new Error(`Recipe import failed (HTTP ${response.status}).`);
+            }
+
+            throw new Error("Recipe import returned invalid JSON.");
+        }
 
         if (!response.ok) {
             throw new Error(recipe.error || "Recipe import failed.");

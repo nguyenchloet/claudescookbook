@@ -13,6 +13,19 @@ var ingredientAmountList = document.getElementsByClassName('ingredient-amount');
 var outputAmountList = document.getElementsByClassName('output-amount');
 var index = 0;
 
+document.querySelectorAll('.ingredient').forEach(function(ingredient) {
+  var checkbox = ingredient.querySelector('input[type="checkbox"]');
+  var label = ingredient.cloneNode(true);
+
+  label.querySelectorAll('input, .output-amount').forEach(function(element) {
+    element.remove();
+  });
+  label.querySelectorAll('.ingredient-amount').forEach(function(element) {
+    element.textContent += ' ';
+  });
+  checkbox.setAttribute('aria-label', label.textContent.replace(/\s+/g, ' ').trim());
+});
+
 // get initial increment
 var currentIncrement = ogIncrement[index].innerHTML;
 
@@ -28,7 +41,7 @@ window.onload = function() {
     outputAmountList[i].innerHTML = ingredientAmountList[i].innerHTML;
   }
 
-  for (var i = 0; i < outputAmountList.length; i++) {
+  for (var i = 0; i < currentIncrements.length; i++) {
     currentIncrements[i].innerHTML = ogIncrement[i].innerHTML;
   }
 }
