@@ -157,18 +157,35 @@ function parseIngredientAmount(value) {
 function updateScaledIngredientAmount(amountElement, outputElement, scale) {
   var originalAmount = amountElement.text().trim();
   var amount = parseIngredientAmount(originalAmount);
+  var unitTextNode = outputElement[0].nextSibling;
+  var originalUnitText = outputElement.data("originalUnitText");
+  if (originalUnitText === undefined && unitTextNode && unitTextNode.nodeType === Node.TEXT_NODE) {
+    originalUnitText = unitTextNode.textContent;
+    outputElement.data("originalUnitText", originalUnitText);
+  }
+
+  if (unitTextNode && originalUnitText !== undefined) {
+    unitTextNode.textContent = originalUnitText;
+  }
+
   if (!Number.isFinite(amount)) {
     outputElement.text(originalAmount);
     return;
   }
 
-  var unitTextNode = outputElement[0].nextSibling;
-  var unitMatch = unitTextNode && unitTextNode.nodeType === Node.TEXT_NODE
+  var unitPattern = "(soup spoons?|bunch(?:es)?|handfuls?|spoonfuls?|spoons?|shots?|cloves?|coffee spoons?)";
+  var approximateUnitMatch = unitTextNode && unitTextNode.nodeType === Node.TEXT_NODE
     ? unitTextNode.textContent.match(
-      /^(\s*)(soup spoons?|bunch(?:es)?|handfuls?|spoonfuls?|spoons?|shots?|cloves?|coffee spoons?)(?=\s+(?!or\b|and\b)[\w(]|[,.(]|$)/i
+      new RegExp("^(\\s*)" + unitPattern + "(\\s+or\\s+two)(?=\\s|[,.(]|$)", "i")
     )
     : null;
-  var supportedIndefiniteAmount = /^(a|an)$/i.test(originalAmount) && unitMatch;
+  var unitMatch = unitTextNode && unitTextNode.nodeType === Node.TEXT_NODE
+    ? unitTextNode.textContent.match(
+      new RegExp("^(\\s*)" + unitPattern + "(?=\\s+(?!or\\b|and\\b)[\\w(]|[,.(]|$)", "i")
+    )
+    : null;
+  var matchedUnit = approximateUnitMatch || unitMatch;
+  var supportedIndefiniteAmount = /^(a|an)$/i.test(originalAmount) && matchedUnit;
 
   if (/^(a|an)$/i.test(originalAmount) && !supportedIndefiniteAmount) {
     outputElement.text(originalAmount);
@@ -176,6 +193,25 @@ function updateScaledIngredientAmount(amountElement, outputElement, scale) {
   }
 
   var scaledAmount = amount * scale;
+  if (approximateUnitMatch) {
+    if (Math.abs(scale - 1) < 0.015) {
+      outputElement.text(originalAmount);
+      return;
+    }
+
+    var upperAmount = amount * 2 * scale;
+    outputElement.text(
+      formatIngredientAmount(scaledAmount) + "–" +
+      formatIngredientAmount(upperAmount)
+    );
+    updateIngredientUnit(
+      unitTextNode,
+      approximateUnitMatch,
+      upperAmount > 1.015
+    );
+    return;
+  }
+
   var displayAmount = supportedIndefiniteAmount && Math.abs(scaledAmount - 1) < 0.015
     ? originalAmount
     : formatIngredientAmount(scaledAmount);
@@ -183,6 +219,10 @@ function updateScaledIngredientAmount(amountElement, outputElement, scale) {
 
   if (!unitMatch) return;
 
+  updateIngredientUnit(unitTextNode, unitMatch, scaledAmount > 1.015);
+}
+
+function updateIngredientUnit(unitTextNode, unitMatch, shouldBePlural) {
   var unit = unitMatch[2];
   var unitForms = {
     "bunch": ["bunch", "bunches"],
@@ -199,10 +239,8 @@ function updateScaledIngredientAmount(amountElement, outputElement, scale) {
   });
   var singularUnit = unitType && unitForms[unitType][0];
   var pluralUnit = unitType && unitForms[unitType][1];
-
   if (!unitType) return;
 
-  var shouldBePlural = scaledAmount > 1.015;
   var desiredUnit = shouldBePlural ? pluralUnit : singularUnit;
   var nextText = unitTextNode.textContent.replace(
     unitMatch[0],
