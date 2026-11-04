@@ -5,7 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Claude's Cookbook</title>
+        <script>document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";</script>
         <script src="font-size.js"></script>
+        <script src="header-controls.js" defer></script>
         <link rel="stylesheet" href="recipestyle.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap">
         <link rel="icon" type="image/png" href="/favicon.png?v=2">
@@ -14,33 +16,39 @@
         <div class="outline"> 
             <header>
                 <nav class="nav-menu" aria-label="Main navigation">
-                    <a class="nav-header" href="index.html"><strong>Claude's Cookbook</strong></a>
+                    <div class="nav-top">
+                        <a class="nav-header" href="index.html"><strong>Claude's Cookbook</strong></a>
+                        <details class="header-controls">
+                            <summary>Controls</summary>
+                            <div class="header-controls-panel">
+                                <div class="cooking-mode-control">
+                                    <button
+                                        id="cooking-mode-toggle"
+                                        class="toggle-switch"
+                                        type="button"
+                                        role="switch"
+                                        aria-checked="false"
+                                        aria-label="Cooking Mode"
+                                    >
+                                        <span class="toggle-knob"></span>
+                                    </button>
+                                    <span>Cooking Mode<br><small>(Keep Screen On)</small></span>
+                                    <span class="cooking-mode-status" role="status" aria-live="polite" hidden></span>
+                                </div>
+                                <button id="theme-toggle" type="button" aria-label="Switch to dark mode">☾</button>
+                                <div class="font-size-controls" aria-label="Text size">
+                                    <button id="decrease-font-size" type="button" aria-label="Decrease text size">A−</button>
+                                    <button id="increase-font-size" type="button" aria-label="Increase text size">A+</button>
+                                </div>
+                            </div>
+                        </details>
+                    </div>
                     <ul class="nav-ul-right">
                         <li><a href="index.html" aria-current="page">Recipes</a></li>
                         <li><a href="recipe-index.html">Recipe Index</a></li>
                         <li><a href="cooking-tips.html">Cooking Tips</a></li>
                         <li><a href="favorites.html">Favorite Recipes (External)</a></li>
                         <li><a href="about.html">About</a></li>
-                        <li class="cooking-mode-control">
-                            <button
-                                id="cooking-mode-toggle"
-                                class="toggle-switch"
-                                type="button"
-                                role="switch"
-                                aria-checked="false"
-                                aria-label="Cooking Mode"
-                            >
-                                <span class="toggle-knob"></span>
-                            </button>
-                            <span>Cooking Mode<br><small>(Keep Screen On)</small></span>
-                        </li>
-                        <li>
-                            <button id="theme-toggle" type="button" aria-label="Switch to dark mode">☾</button>
-                        </li>
-                        <li class="font-size-controls" aria-label="Text size">
-                            <button id="decrease-font-size" type="button" aria-label="Decrease text size">A−</button>
-                            <button id="increase-font-size" type="button" aria-label="Increase text size">A+</button>
-                        </li>
                     </ul>
                 </nav>
             </header>
@@ -1288,7 +1296,7 @@
                                         <li class="ingredient"><input type="checkbox">1 part spinach</li>
                                         <li class="ingredient"><input type="checkbox">1 part tarragon (You can use more spinach instead of tarragon due to price in the USA)</li>
                                         <li class="ingredient"><input type="checkbox">some mayonnaise</li>
-                                        <li class="ingredient"><input type="checkbox">a shot of tabasco</li>
+                                        <li class="ingredient"><input type="checkbox"><span class="ingredient-amount">a</span><span class="output-amount"></span>shot of tabasco</li>
                                         <li class="ingredient"><input type="checkbox">some lemon juice</li>
                                         <li class="ingredient"><input type="checkbox">some cinnamon</li>
                                         <li class="ingredient"><input type="checkbox">salt</li>
@@ -1467,34 +1475,7 @@
         </div> <!-- End outline-->
         <script type='text/javascript' src='recipes.js'></script>
         <script src="user-recipes.js"></script>
-        <script>
-            const themeToggle = document.getElementById("theme-toggle");
-
-            const savedTheme = localStorage.getItem("theme") || "light";
-            document.documentElement.setAttribute("data-theme", savedTheme);
-
-            function updateThemeButton() {
-                const currentTheme = document.documentElement.getAttribute("data-theme");
-
-                themeToggle.textContent = currentTheme === "dark" ? "☀" : "☾";
-                themeToggle.setAttribute(
-                    "aria-label",
-                    currentTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"
-                );
-            }
-
-            updateThemeButton();
-
-            themeToggle.addEventListener("click", () => {
-                const currentTheme = document.documentElement.getAttribute("data-theme");
-                const newTheme = currentTheme === "dark" ? "light" : "dark";
-
-                document.documentElement.setAttribute("data-theme", newTheme);
-                localStorage.setItem("theme", newTheme);
-
-                updateThemeButton();
-            });
-        </script>
+        <script src="cooking-mode.js"></script>
         <footer>
             <p>&copy; 2026 Claude's Cookbook. All rights reserved.</p>
         </footer>

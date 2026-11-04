@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script>document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";</script>
         <script src="font-size.js"></script>
+        <script src="header-controls.js" defer></script>
         <title>Cooking Tips | Claude's Cookbook</title>
         <link rel="stylesheet" href="recipestyle.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap">
@@ -13,19 +14,27 @@
     <body>
         <header>
             <nav class="nav-menu" aria-label="Main navigation">
-                <a href="index.html" class="nav-header">
-                    <strong>Claude's Cookbook</strong>
-                </a>
+                <div class="nav-top">
+                    <a href="index.html" class="nav-header">
+                        <strong>Claude's Cookbook</strong>
+                    </a>
+                    <details class="header-controls">
+                        <summary>Controls</summary>
+                        <div class="header-controls-panel">
+                            <button id="theme-toggle" type="button" aria-label="Switch to dark mode">☾</button>
+                            <div class="font-size-controls" aria-label="Text size">
+                                <button id="decrease-font-size" type="button" aria-label="Decrease text size">A−</button>
+                                <button id="increase-font-size" type="button" aria-label="Increase text size">A+</button>
+                            </div>
+                        </div>
+                    </details>
+                </div>
                 <ul class="nav-ul-right">
                     <li><a href="index.html">Recipes</a></li>
                     <li><a href="recipe-index.html">Recipe Index</a></li>
                     <li><a href="cooking-tips.html" aria-current="page">Cooking Tips</a></li>
                     <li><a href="favorites.html">Favorite Recipes (External)</a></li>
                     <li><a href="about.html">About</a></li>
-                    <li class="font-size-controls" aria-label="Text size">
-                        <button id="decrease-font-size" type="button" aria-label="Decrease text size">A−</button>
-                        <button id="increase-font-size" type="button" aria-label="Increase text size">A+</button>
-                    </li>
                 </ul>
             </nav>
         </header>

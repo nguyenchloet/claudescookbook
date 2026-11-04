@@ -112,6 +112,10 @@ next.on('click', function(e) {
 function parseIngredientAmount(value) {
   value = value.trim();
 
+  if (/^(a|an)$/i.test(value)) {
+    return 1;
+  }
+
   // Support common Unicode fractions
   var unicodeFractions = {
     '½': 0.5,
@@ -148,6 +152,63 @@ function parseIngredientAmount(value) {
 
   // Support ordinary integers and decimals
   return Number(value);
+}
+
+function updateScaledIngredientAmount(amountElement, outputElement, scale) {
+  var originalAmount = amountElement.text().trim();
+  var amount = parseIngredientAmount(originalAmount);
+  if (!Number.isFinite(amount)) {
+    outputElement.text(originalAmount);
+    return;
+  }
+
+  var unitTextNode = outputElement[0].nextSibling;
+  var unitMatch = unitTextNode && unitTextNode.nodeType === Node.TEXT_NODE
+    ? unitTextNode.textContent.match(
+      /^(\s*)(soup spoons?|bunch(?:es)?|handfuls?|spoonfuls?|spoons?|shots?|cloves?|coffee spoons?)(?=\s+(?!or\b|and\b)[\w(]|[,.(]|$)/i
+    )
+    : null;
+  var supportedIndefiniteAmount = /^(a|an)$/i.test(originalAmount) && unitMatch;
+
+  if (/^(a|an)$/i.test(originalAmount) && !supportedIndefiniteAmount) {
+    outputElement.text(originalAmount);
+    return;
+  }
+
+  var scaledAmount = amount * scale;
+  var displayAmount = supportedIndefiniteAmount && Math.abs(scaledAmount - 1) < 0.015
+    ? originalAmount
+    : formatIngredientAmount(scaledAmount);
+  outputElement.text(displayAmount);
+
+  if (!unitMatch) return;
+
+  var unit = unitMatch[2];
+  var unitForms = {
+    "bunch": ["bunch", "bunches"],
+    "clove": ["clove", "cloves"],
+    "coffee spoon": ["coffee spoon", "coffee spoons"],
+    "handful": ["handful", "handfuls"],
+    "shot": ["shot", "shots"],
+    "soup spoon": ["soup spoon", "soup spoons"],
+    "spoon": ["spoon", "spoons"],
+    "spoonful": ["spoonful", "spoonfuls"]
+  };
+  var unitType = Object.keys(unitForms).find(function(candidate) {
+    return unitForms[candidate].includes(unit.toLowerCase());
+  });
+  var singularUnit = unitType && unitForms[unitType][0];
+  var pluralUnit = unitType && unitForms[unitType][1];
+
+  if (!unitType) return;
+
+  var shouldBePlural = scaledAmount > 1.015;
+  var desiredUnit = shouldBePlural ? pluralUnit : singularUnit;
+  var nextText = unitTextNode.textContent.replace(
+    unitMatch[0],
+    unitMatch[1] + desiredUnit
+  );
+  unitTextNode.textContent = nextText;
 }
 
 
@@ -216,16 +277,15 @@ function increaseYield() {
   ingredient.find('.ingredient-amount').each(function() {
     var amountElement = $(this);
     var outputElement = amountElement.next('.output-amount');
-    var originalAmount = amountElement.text().trim();
-    var amount = parseIngredientAmount(originalAmount);
 
     if (!outputElement.length) return;
 
-    if (Number.isFinite(amount) && originalYield > 0) {
-      var scaledAmount = amount * currentYield / originalYield;
-      outputElement.text(formatIngredientAmount(scaledAmount));
-    } else {
-      outputElement.text(originalAmount);
+    if (originalYield > 0) {
+      updateScaledIngredientAmount(
+        amountElement,
+        outputElement,
+        currentYield / originalYield
+      );
     }
   });
 });
@@ -266,16 +326,15 @@ function decreaseYield() {
   ingredient.find('.ingredient-amount').each(function() {
     var amountElement = $(this);
     var outputElement = amountElement.next('.output-amount');
-    var originalAmount = amountElement.text().trim();
-    var amount = parseIngredientAmount(originalAmount);
 
     if (!outputElement.length) return;
 
-    if (Number.isFinite(amount) && originalYield > 0) {
-      var scaledAmount = amount * currentYield / originalYield;
-      outputElement.text(formatIngredientAmount(scaledAmount));
-    } else {
-      outputElement.text(originalAmount);
+    if (originalYield > 0) {
+      updateScaledIngredientAmount(
+        amountElement,
+        outputElement,
+        currentYield / originalYield
+      );
     }
   });
 });
@@ -302,7 +361,7 @@ function resetYield() {
       var outputElement = amountElement.next('.output-amount');
 
       if (outputElement.length) {
-        outputElement.text(amountElement.text().trim());
+        updateScaledIngredientAmount(amountElement, outputElement, 1);
       }
     });
   });
@@ -341,60 +400,3 @@ function decreaseIncrement() {
   currentIncrement = Math.max(0.25, currentIncrement - 0.25);
   incrementElement.text(Number(currentIncrement.toFixed(2)));
 }
-
-// Cooking Mode: keep the screen awake while cooking
-let cookingModeEnabled = false;
-let screenWakeLock = null;
-
-const cookingModeToggle = document.getElementById("cooking-mode-toggle");
-
-async function requestScreenWakeLock() {
-    if (!cookingModeEnabled || !("wakeLock" in navigator)) {
-        return;
-    }
-
-    try {
-        screenWakeLock = await navigator.wakeLock.request("screen");
-
-        screenWakeLock.addEventListener("release", () => {
-            screenWakeLock = null;
-        });
-
-    } catch (error) {
-        console.error("Could not activate screen wake lock:", error);
-        cookingModeEnabled = false;
-        cookingModeToggle.textContent = "Start Cooking Mode";
-        cookingModeToggle.setAttribute("aria-pressed", "false");
-    }
-}
-
-cookingModeToggle.addEventListener("click", async () => {
-    if (cookingModeEnabled) {
-        cookingModeEnabled = false;
-
-        if (screenWakeLock) {
-            await screenWakeLock.release();
-            screenWakeLock = null;
-        }
-
-        cookingModeToggle.setAttribute("aria-checked", "false");
-
-    } else {
-        if (!("wakeLock" in navigator)) {
-            cookingModeToggle.textContent = "Wake Lock Unsupported";
-            return;
-        }
-
-        cookingModeEnabled = true;
-        cookingModeToggle.setAttribute("aria-checked", "true");
-
-        await requestScreenWakeLock();
-    }
-});
-
-// Reacquire the wake lock if the user returns to the page
-document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible" && cookingModeEnabled && !screenWakeLock) {
-        requestScreenWakeLock();
-    }
-});

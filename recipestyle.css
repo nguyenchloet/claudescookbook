@@ -102,16 +102,23 @@ header {
 .nav-menu {
     display: flex;
     width: min(var(--content-width), 100%);
-    min-height: 72px;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
     margin: 0 auto;
     padding: 12px 28px;
 }
 
+.nav-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
 .nav-header {
-    flex: 0 0 auto;
+    flex: 0 1 auto;
     color: var(--text-color);
     font-family: var(--font-display);
     font-size: 1.4rem;
@@ -119,6 +126,7 @@ header {
     letter-spacing: -0.035em;
     line-height: 1.2;
     text-decoration: none;
+    white-space: nowrap;
 }
 
 .nav-header strong {
@@ -128,8 +136,10 @@ header {
 .nav-ul,
 .nav-ul-right {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: clamp(14px, 2vw, 28px);
+    gap: 4px clamp(14px, 2vw, 24px);
+    width: 100%;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -165,10 +175,73 @@ header {
     cursor: pointer;
 }
 
-.font-size-controls {
+.header-controls {
+    position: relative;
+    flex: 0 1 auto;
+    max-width: 100%;
+    margin-left: auto;
+}
+
+.header-controls summary {
+    min-width: 82px;
+    padding: 6px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    background: transparent;
+    color: var(--muted-color);
+    cursor: pointer;
+    font-size: 0.84rem;
+    line-height: 1.4;
+    list-style: none;
+    text-align: center;
+}
+
+.header-controls summary::-webkit-details-marker {
+    display: none;
+}
+
+.header-controls summary::marker {
+    content: "";
+}
+
+.header-controls summary::after {
+    display: inline-block;
+    margin-left: 7px;
+    content: "⌄";
+}
+
+.header-controls[open] summary::after {
+    content: "⌃";
+}
+
+.header-controls summary:hover,
+.header-controls[open] summary {
+    border-color: var(--accent-color);
+    background: var(--button-bg);
+    color: var(--text-color);
+}
+
+.header-controls summary:focus-visible {
+    outline: 2px solid var(--focus-color);
+    outline-offset: 3px;
+}
+
+.header-controls-panel {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 4px;
+    justify-content: flex-end;
+    gap: 12px;
+    max-width: 100%;
+    margin-top: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    background: var(--content-bg);
+}
+
+.header-controls-panel > button {
+    flex: 0 0 auto;
 }
 
 .font-size-controls button {
@@ -220,6 +293,16 @@ header {
 .cooking-mode-control small {
     color: var(--muted-color);
     font-size: 0.68rem;
+}
+
+.cooking-mode-status {
+    max-width: 260px;
+    color: var(--muted-color);
+    white-space: normal;
+}
+
+.cooking-mode-status[hidden] {
+    display: none;
 }
 
 .toggle-switch {
@@ -761,25 +844,18 @@ footer p {
 }
 
 @media (max-width: 900px) {
-    .nav-menu {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px 24px;
-    }
-
     .nav-ul-right {
-        flex-wrap: wrap;
         justify-content: center;
-        gap: 6px 20px;
     }
 }
 
 @media (max-width: 600px) {
     .nav-menu {
-        min-height: 0;
-        flex-direction: column;
-        gap: 7px;
         padding: 16px 16px 12px;
+    }
+
+    .nav-top {
+        gap: 10px;
     }
 
     .nav-header {
@@ -787,8 +863,8 @@ footer p {
     }
 
     .nav-ul-right {
-        width: 100%;
-        gap: 2px 16px;
+        gap: 2px 14px;
+        justify-content: center;
     }
 
     .nav-ul-right a {
@@ -807,6 +883,13 @@ footer p {
     #theme-toggle {
         width: 34px;
         height: 34px;
+    }
+
+    .header-controls-panel {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        padding: 9px;
     }
 
     #recipes,
