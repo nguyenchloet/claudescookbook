@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <script>document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";</script>
+        <script src="font-size.js"></script>
         <link rel="stylesheet" href="recipestyle.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap">
         <link rel="stylesheet" href="aboutstyle.css">
@@ -21,6 +22,10 @@
                         <li><a href="recipe-index.html">Recipe Index</a></li>
                         <li><a href="favorites.html">Favorite Recipes (External)</a></li>
                         <li><a href="about.html" aria-current="page">About</a></li>
+                        <li class="font-size-controls" aria-label="Text size">
+                            <button id="decrease-font-size" type="button" aria-label="Decrease text size">A−</button>
+                            <button id="increase-font-size" type="button" aria-label="Increase text size">A+</button>
+                        </li>
                     </ul>
                 </nav>
             </header>

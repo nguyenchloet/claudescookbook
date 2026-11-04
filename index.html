@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Claude's Cookbook</title>
+        <script src="font-size.js"></script>
         <link rel="stylesheet" href="recipestyle.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mrs+Saint+Delafield&display=swap">
         <link rel="icon" type="image/png" href="/favicon.png?v=2">
@@ -34,6 +35,10 @@
                         </li>
                         <li>
                             <button id="theme-toggle" type="button" aria-label="Switch to dark mode">☾</button>
+                        </li>
+                        <li class="font-size-controls" aria-label="Text size">
+                            <button id="decrease-font-size" type="button" aria-label="Decrease text size">A−</button>
+                            <button id="increase-font-size" type="button" aria-label="Increase text size">A+</button>
                         </li>
                     </ul>
                 </nav>
@@ -152,15 +157,15 @@
                                 </div>
                                 <div class="directions-div list-container"><em>Directions:</em>
                                     <ul class="directions-list list"> 
-                                        <li class="direction">Use tiny extruder and grind the meat (Note: Probably 1-2mm extruder size). If no extruder, chop finely. Grind the meat twice with the anchovy filets in the meat grinder. The second time, let the mixture drop into a mixing bowl</li>
+                                        <li class="direction">Use tiny extruder and grind the meat (Note: Probably 1-2mm extruder size). If no extruder, chop finely. Grind the meat twice with the anchovy filets in the meat grinder. The second time, let the mixture drop into a mixing bowl.</li>
                                         <li class="direction">You can add some accent (MSG) if you have to improve the taste of red meat.</li>
                                         <li class="direction">Chop the red onion. Wash once it is chopped to get the harshness off, therefore you can chop roughly.</li>
                                         <li class="direction">Finely chop capers, anchovies and parsley. Parsley can be added as a garnish or mixed in.</li>
                                         <li class="direction">Add ingredients to bowl with meat.</li>
                                         <li class="direction">Mix ingredients and taste. Do not over-mix because it will alter the color of the steak tartare.</li>
                                         <li class="direction">If mixture is too dry, add a little more cold water to make more soft then you’re in business.</li>
-                                        <li class="direction">Use a good shot of olive oil to make it come nice and shiny</li>
-                                        <li class="direction">Dress in serving plate and refrigerate for at least half an hour</li>
+                                        <li class="direction">Use a good shot of olive oil to make it come nice and shiny.</li>
+                                        <li class="direction">Dress in serving plate and refrigerate for at least half an hour.</li>
                                     </ul>
                                 </div>
                             </li>
@@ -195,11 +200,11 @@
                                     <div class="increment-div">
                                         <strong>Increment:</strong>
                                         <div class="increment-output-container">
-                                            <div class="value-button" id="decrease-increment-whole-chicken" onclick="decreaseIncrement()" value="decrease value">-</div>
-                                            <div class="increment-output"></div>
-                                            <div class="value-button" id="increase-increment-whole-chicken" onclick="increaseIncrement()" value="increase value">+</div>
-                                            <button type="button" class="reset-increment" onclick="resetIncrement()">Reset</button>
+                                            <button type="button" class="value-button" id="decrease-increment-whole-chicken" onclick="decreaseIncrement()" aria-label="Decrease increment">−</button>
+                                            <div class="increment-output" aria-live="polite"></div>
+                                            <button type="button" class="value-button" id="increase-increment-whole-chicken" onclick="increaseIncrement()" aria-label="Increase increment">+</button>
                                         </div>
+                                        <button type="button" class="reset-yield reset-increment" onclick="resetIncrement()">Reset</button>
                                         <div>
                                             <div class="og-increment">1</div>
                                             <div><p>Choose an increment,<br> then adjust the yield.</p></div>
@@ -431,7 +436,7 @@
                                 </div>
                                 <div class="directions-div list-container"><em>Directions:</em>
                                     <ul class="directions-list list"> 
-                                        <li class="direction">Chop the onion, garlic, and mushroom</li>
+                                        <li class="direction">Chop the onion, garlic, and mushroom.</li>
                                         <li class="direction">Put some oil in frying pan, fry all three ingredients slowly until almost cooked (when onions become almost transparent).</li>
                                         <li class="direction">Take off fryer, let cool, add some chopped Italian parsley.</li>
                                         <li class="direction">To prepare tomatoes, cut 1/3 of head off and dig out pulp of tomato without damaging the shell.</li>
@@ -588,7 +593,7 @@
                                         <li class="direction">Put large bouquet de garnis with 1 onion and 2 carrots into the pot (carrot does not need to be peeled but should be washed).</li>
                                         <li class="direction">Bring to a boil, then cook for an hour or so until veal is done. Cut a cube in two to see if it is done and try. If meat is cooked, remove meat with wire mesh.</li>
                                         <li class="direction">Make a roux: Add flour to small bowl of stock liquid, mix, then add back to stock pot and bring to boil to thicken.</li>
-                                        <li class="direction">When stock is boiling, take pot off the heat, can add some lemon juice (Note: add roux when pot is off the fire. When adding flour, add three quarters of what you think should be enough. Then bring to boil. After, let cook for at least ten to fifteen minutes)</li>
+                                        <li class="direction">When stock is boiling, take pot off the heat, can add some lemon juice (Note: add roux when pot is off the fire. When adding flour, add three quarters of what you think should be enough. Then bring to boil. After, let cook for at least ten to fifteen minutes).</li>
                                         <li class="direction">Add seasoning (put some at beginning too). Make sure no lumps. If lumps, pass through sieve before adding liaison.</li>
                                         <li class="direction">Make the liaison by whisking egg yolk, heavy cream, nutmeg and lemon juice.</li>
                                         <li class="direction">Add liaison to stock off the heat and whisk well. Do NOT let it boil or else you will have scrambled eggs.</li>

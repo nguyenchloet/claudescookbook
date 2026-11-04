@@ -6,7 +6,7 @@
 
 .favorite-form-section h2,
 .saved-favorites-section > h2 {
-    margin: 0 0 18px;
+    margin: 0 0 14px;
     color: var(--text-color);
     font-family: var(--font-display);
     font-size: 1.65rem;
