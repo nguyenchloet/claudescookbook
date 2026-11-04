@@ -34,6 +34,23 @@
     margin: 0;
 }
 
+.about-divider {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    color: var(--accent-color);
+}
+
+.about-divider svg {
+    width: 120px;
+    height: 32px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.4;
+}
+
 .about-main em {
     color: var(--muted-color);
 }
