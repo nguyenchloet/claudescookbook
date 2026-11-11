@@ -29,6 +29,32 @@ document.querySelectorAll('.ingredient').forEach(function(ingredient) {
 // get initial increment
 var currentIncrement = ogIncrement[index].innerHTML;
 
+document.querySelectorAll('.recipe-item .values-div').forEach(function(form) {
+    const controls = document.createElement('div');
+    controls.className = 'weight-unit-controls';
+
+    const label = document.createElement('label');
+    label.textContent = 'Units:';
+
+    const select = document.createElement('select');
+    select.className = 'weight-unit-select';
+    select.setAttribute('aria-label', 'Weight units');
+
+    [
+        ['lb', 'lb'],
+        ['kg', 'kg'],
+        ['oz', 'oz']
+    ].forEach(function(optionData) {
+        select.value = "lb";
+        const option = document.createElement('option');
+        option.value = optionData[0];
+        option.textContent = optionData[1];
+        select.appendChild(option);
+    });
+
+    controls.append(label, select);
+    form.appendChild(controls);
+});
 
 // get ingredient values on page load
 window.onload = function() {
@@ -154,6 +180,17 @@ function parseIngredientAmount(value) {
   return Number(value);
 }
 
+const WEIGHT_IN_GRAMS = {
+    oz: 28.349523125,
+    lb: 453.59237,
+    g: 1,
+    kg: 1000
+};
+
+function convertWeight(amount, fromUnit, toUnit) {
+    return amount * WEIGHT_IN_GRAMS[fromUnit] / WEIGHT_IN_GRAMS[toUnit];
+}
+
 function updateScaledIngredientAmount(amountElement, outputElement, scale) {
   var originalAmount = amountElement.text().trim();
   var amount = parseIngredientAmount(originalAmount);
@@ -193,6 +230,39 @@ function updateScaledIngredientAmount(amountElement, outputElement, scale) {
   }
 
   var scaledAmount = amount * scale;
+
+  // Convert weight measurements using the original quantity.
+var selectedUnit = $(outputElement[0])
+    .closest('.recipe-item')
+    .find('.weight-unit-select')
+    .val();
+
+var weightMatch = originalUnitText &&
+    originalUnitText.match(/^\s*(oz|lb|g|kg)\b/i);
+
+if (weightMatch && WEIGHT_IN_GRAMS[selectedUnit]) {
+    var originalUnit = weightMatch[1].toLowerCase();
+
+    var convertedAmount = convertWeight(
+        scaledAmount,
+        originalUnit,
+        selectedUnit
+    );
+
+    outputElement.text(
+        Number(convertedAmount.toFixed(3)).toString()
+    );
+
+    if (unitTextNode) {
+        unitTextNode.textContent = originalUnitText.replace(
+            /^(\s*)(oz|lb|g|kg)\b/i,
+            '$1' + selectedUnit
+        );
+    }
+
+    return;
+}
+
   if (approximateUnitMatch) {
     if (Math.abs(scale - 1) < 0.015) {
       outputElement.text(originalAmount);
@@ -438,3 +508,28 @@ function decreaseIncrement() {
   currentIncrement = Math.max(0.25, currentIncrement - 0.25);
   incrementElement.text(Number(currentIncrement.toFixed(2)));
 }
+
+/* Make the kg/lb dropdown trigger recalculation */
+$(document).on('change', '.weight-unit-select', function() {
+    var recipe = $(this).closest('.recipe-item');
+
+    var originalYield = Number(recipe.find('.og-yield').text());
+    var currentYield = Number(recipe.find('.yield-output').text());
+
+    if (!Number.isFinite(originalYield) || originalYield <= 0) return;
+
+    var scale = currentYield / originalYield;
+
+    recipe.find('.ingredient-amount').each(function() {
+        var amountElement = $(this);
+        var outputElement = amountElement.next('.output-amount');
+
+        if (outputElement.length) {
+            updateScaledIngredientAmount(
+                amountElement,
+                outputElement,
+                scale
+            );
+        }
+    });
+});
