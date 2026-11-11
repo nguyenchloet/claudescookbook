@@ -678,6 +678,24 @@ header {
     text-decoration: underline;
 }
 
+.values-div {
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.weight-unit-controls {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--muted-color);
+    font-size: 0.84rem;
+}
+
+.weight-unit-controls label {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
 .list-container {
     margin: 28px 0 0;
     color: var(--text-color);
